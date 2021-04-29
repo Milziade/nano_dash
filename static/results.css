@@ -1,0 +1,60 @@
+body {
+    background-color: #f1f1f1;
+    font-family: Montserrat, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+h1 {
+    text-align: center;
+}
+.card-header {
+    text-align: center;
+    background-color: #a8dadc;
+}
+.card-body {
+    text-align: center;
+}
+#showTable {
+  display: flex;
+  justify-content: center;
+}
+#table{
+    display: none;
+}
+table {
+    border: 3px solid black;
+    border-collapse: collapse;
+    border-spacing: 5px;
+    margin-left:auto;
+    margin-right:auto;
+}
+tr {
+    border: 2px solid black;
+}
+th {
+    text-align: center;
+    border: 1px solid black;
+}
+td {
+    padding: 5px;
+    border: 1px solid black;
+}
+#index {
+    text-align: center;
+}
+.type {
+    text-align: center;
+}
+#in-out {
+    display: flex;
+    justify-content: center;
+}
+canvas {
+    margin-top: 20px;
+}
+#outflow {
+    display: none;
+}
+#lineChart{
+    margin-top:50px;
+}

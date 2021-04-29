@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link href="/static/home.css" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block content %}
+<body>
+<br>
+<div class="container">
+    <div class="row">
+        <h1>Nano Explorer</h1>
+    </div>
+</div>
+
+<div class="container" id="form">
+    <form action="" method="post">
+        <h2>{{form.address.label}}</h2>
+        <h3 id="insert-link">{{form.address}}</h3>
+        <input class="btn btn-primary" type="submit" value="Explore">
+    </form>
+</div>
+
+<br>
+
+<div class="container">
+    <div class="row">
+        <span>
+            <a href="https://nano.org/">About Nano</a>
+            •
+            <a href="https://www.reddit.com/r/nanocurrency/">Reddit</a>
+            •
+            <a href="https://chat.nano.org/">Discord</a>
+        </span>
+    </div>
+</div>
+</body>
+{% endblock %}

@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link href="/static/results.css" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block content %}
+
+<br>
+
+<!-- Generic info -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Account</div>
+                <div class="card-body">
+                    <p class="card-text">{{ address }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Balance</div>
+                <div class="card-body">
+                    <p class="card-text">{{ "%.5f"|format(balance) }}  NANO</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">N° transactions</div>
+                <div class="card-body">
+                    <p class="card-text">{{df|length}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Active since</div>
+                <div class="card-body">
+                    <p class="card-text">{{time.0}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--
+<table border="1">
+    <thead>
+        <tr>
+            {% for col in colnames %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in df %}
+        <tr>
+            {% for col in colnames %}
+            <td>{{ record[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+Display df as HTML table
+{{html | safe}}
+-->
+<br>
+<div class="container" id="showTable">
+    <button onclick="hideTable()" type="button" class="btn btn-primary">Show Transaction Table</button>
+</div>
+
+<br>
+
+<!-- Transaction tab -->
+<div class="container" id="table">
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Index</th>
+            <th scope="col">Type</th>
+            <th scope="col">Account</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in df %}
+        <tr>
+            <td id="index">{{df.index(i)}}</td>
+            {% if i.type == "send" %}
+            <td class="type" style="color:red">{{i.type}}</td>
+            {% else %}
+            <td class="type">{{i.type}}</td>
+            {% endif %}
+
+            <td>{{i.account}}</td>
+            <td>{{i.amount}}</td>
+            <td>{{i.local_timestamp}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    <div class="row" style="text-align:center;">
+        <p>More info <a href="https://nanocrawler.cc/explorer/account/{{address}}/history" target="_blank">here</a></p>
+    </div>
+</div>
+<script>
+    function hideTable() {
+        let x = document.getElementById("table");
+        if (x.style.display == "none") {
+            x.style.display = "block";
+        } else{
+            x.style.display = "none";
+        }
+    }
+</script>
+
+
+<!--
+<div class="container">
+    <h3>Ricevuti</h3>
+    <p>{{accounts_rec}}
+        {{amount_rec}}</p>
+    <h3>Inviati</h3>
+    <p>{{accounts_send}}
+        {{amount_send}}</p>
+</div>
+-->
+
+<br>
+<!-- Pie Chart -->
+<div class="container" id="in-out">
+    <div class="p-1"><button onclick="income()" type="button" class="btn btn-success">Income</button></div>
+    <div class="p-1"><button onclick="outflow()" type="button" class="btn btn-danger">Outflow</button></div>
+
+</div>
+
+<br>
+
+<div class="container" id="pieChart">
+        <div class="col-md-12" id="income">
+            <canvas id="pieChartIn" width="350" height="100"></canvas>
+            <script>
+                let pieChartIn = document.getElementById('pieChartIn').getContext('2d');
+
+                // Global Options
+                Chart.defaults.global.defaultFontFamily = 'Lato';
+                Chart.defaults.global.defaultFontSize = 12;         // fontSize leggenda
+                Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
+
+                let pCI = new Chart(pieChartIn, {
+                  type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                  data:{
+                    labels: [
+                    {% for i in accounts_rec %}
+                    "{{ i }}",
+                    {% endfor %}
+                    ],
+                    datasets:[{
+                      data: {{amount_rec}},
+                      backgroundColor:[
+                        {% for i in colors %}
+                        "{{i}}",
+                        {% endfor %}
+                      ],
+                      borderWidth:1,
+                      borderColor:'#777',
+                      hoverBorderWidth:3,       // ?
+                      hoverBorderColor:'#000'   // ?
+                    }]
+                  },
+                  options:{
+                    title:{
+                      display:true,
+                      text:'Income',
+                      fontSize:25
+                    },
+                    legend:{
+                      display:true,
+                      position:'left',
+                      labels:{
+                        fontColor:'#000'
+                      }
+                    },
+                    layout:{
+                      padding:{
+                        left:50,
+                        right:0,
+                        bottom:0,
+                        top:0
+                      }
+                    },
+                    tooltips:{
+                      enabled:true
+                    }
+                  }
+                });
+          </script>
+        </div>
+        <div class="col-md-12" id="outflow">
+            <canvas id="pieChartOut" width="350" height="100"></canvas>
+            <script>
+                let pieChartOut = document.getElementById('pieChartOut').getContext('2d');
+
+                // Global Options
+                Chart.defaults.global.defaultFontFamily = 'Lato';
+                Chart.defaults.global.defaultFontSize = 12;         // fontSize leggenda
+                Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
+
+                let pCO = new Chart(pieChartOut, {
+                  type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                  data:{
+                    labels: [
+                    {% for i in accounts_send %}
+                    "{{ i }}",
+                    {% endfor %}
+                    ],
+                    datasets:[{
+                      data: {{amount_send}},
+                      backgroundColor:[
+                        {% for i in colors %}
+                        "{{i}}",
+                        {% endfor %}
+                      ],
+                      borderWidth:1,
+                      borderColor:'#777',
+                      hoverBorderWidth:3,       // ?
+                      hoverBorderColor:'#000'   // ?
+                    }]
+                  },
+                  options:{
+                    title:{
+                      display:true,
+                      text:'Outflow',
+                      fontSize:25
+                    },
+                    legend:{
+                      display:true,
+                      position:'right',
+                      labels:{
+                        fontColor:'#000'
+                      }
+                    },
+                    layout:{
+                      padding:{
+                        left:50,
+                        right:0,
+                        bottom:0,
+                        top:0
+                      }
+                    },
+                    tooltips:{
+                      enabled:true
+                    }
+                  }
+                });
+            </script>
+        </div>
+</div>
+<script>
+    function income() {
+        let x = document.getElementById("income");
+        let y = document.getElementById("outflow");
+            if (x.style.display == "none") {
+                x.style.display = "block";
+                y.style.display = "none";
+            } else{
+                x.style.display = "none";
+            }
+    }
+    function outflow() {
+        let x = document.getElementById("outflow");
+        let y = document.getElementById("income");
+            if (x.style.display == "none") {
+                x.style.display = "block";
+                y.style.display = "none";
+            } else{
+                x.style.display = "none";
+            }
+    }
+</script>
+
+<br>
+
+<!-- Line Chart -->
+<div class="container" id="lineChart">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" id="balance">Balance</div>
+                <canvas id="fullBalChart" width="300" height="150"></canvas>
+                <script>
+                    let fullBalChart = document.getElementById('fullBalChart').getContext('2d');
+
+                    // Global Options
+                    Chart.defaults.global.defaultFontFamily = 'Lato';
+                    Chart.defaults.global.defaultFontSize = 18;         // fontSize leggenda
+                    Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
+
+                    let fullBC = new Chart(fullBalChart, {
+                      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                      data:{
+                        labels: [
+                        {% for i in time %}
+                        "{{ i }}",
+                        {% endfor %}
+                        ],
+                        datasets:[{
+                          label:'Cumulative balance',      // ?
+                          data: {{overall_bal}},
+                          borderWidth:1,
+                          borderColor:'#000',
+                          hoverBorderWidth:3,       // ?
+                          hoverBorderColor:'#000'   // ?
+                        }]
+                      },
+                      options:{
+                        title:{
+                          display:false,
+                          text:'Balance',
+                          fontSize:25
+                        },
+                        legend:{
+                          display:true,
+                          position:'right',
+                          labels:{
+                            fontColor:'#000'
+                          }
+                        },
+                        layout:{
+                          padding:{
+                            left:50,
+                            right:0,
+                            bottom:0,
+                            top:0
+                          }
+                        },
+                        tooltips:{
+                          enabled:true
+                        }
+                      }
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" id="change">Change</div>
+                <canvas id="instaBalChart" width="300" height="150"></canvas>
+                <script>
+                    let instaBalChart = document.getElementById('instaBalChart').getContext('2d');
+
+                    // Global Options
+                    Chart.defaults.global.defaultFontFamily = 'Lato';
+                    Chart.defaults.global.defaultFontSize = 18;         // fontSize leggenda
+                    Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
+
+                    let instaBC = new Chart(instaBalChart, {
+                      type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                      data:{
+                        labels: [
+                        {% for i in time %}
+                        "{{ i }}",
+                        {% endfor %}
+                        ],
+                        datasets:[{
+                          label:'Instant balance',      // ?
+                          data: {{insta_bal}},
+                          borderWidth:1,
+                          borderColor:'#000',
+                          hoverBorderWidth:3,       // ?
+                          hoverBorderColor:'#000'   // ?
+                        }]
+                      },
+                      options:{
+                        title:{
+                          display:false,
+                          text:'Insta Balance',
+                          fontSize:25
+                        },
+                        legend:{
+                          display:true,
+                          position:'right',
+                          labels:{
+                            fontColor:'#000'
+                          }
+                        },
+                        layout:{
+                          padding:{
+                            left:50,
+                            right:0,
+                            bottom:0,
+                            top:0
+                          }
+                        },
+                        tooltips:{
+                          enabled:true
+                        }
+                      }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+{% endblock %}
