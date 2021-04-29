@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 
 {% block head %}
-<link href="/static/home.css" rel="stylesheet" type="text/css">
-
+<link href="/static/error.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>It seems like an error!</h1>
-    <h5>Check your address and try again</h5>
-</div>
+<body>
+    <div class="container" id="error">
+        <div class="row">
+            <h1>Error!</h1>
+            <h5>Is it the correct address?</h5>
+        </div>
+        <div class="img-cont">
+            <img src="/static/img/error_symbol.png" alt="error">
+        </div>
+    </div>
+</body>
 {% endblock %}

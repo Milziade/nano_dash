@@ -71,13 +71,5 @@ def pie():
     return render_template('pie_chart.html', title='Bitcoin Monthly Price in USD', max=17000, set=zip(values, labels, colors))
 
 
-@app.route('/r/<address>')
-def r(address):
-    history = get_json(address)
-    df, columns = get_df(history)
-    accounts, amount = pie_chart(df)
-    return render_template('risultati.html', accounts=accounts, amount=amount)
-
-
 if __name__ == "__main__":
     app.run(debug=True)

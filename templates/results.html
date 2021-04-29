@@ -74,7 +74,7 @@ Display df as HTML table
 -->
 <br>
 <div class="container" id="showTable">
-    <button onclick="hideTable()" type="button" class="btn btn-primary">Show Transaction Table</button>
+    <button onclick="hideTable()" type="button" class="btn btn-primary" id="btn">Show Transaction Table</button>
 </div>
 
 <br>
@@ -84,7 +84,6 @@ Display df as HTML table
     <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">Index</th>
             <th scope="col">Type</th>
             <th scope="col">Account</th>
             <th scope="col">Amount</th>
@@ -94,16 +93,15 @@ Display df as HTML table
     <tbody>
         {% for i in df %}
         <tr>
-            <td id="index">{{df.index(i)}}</td>
             {% if i.type == "send" %}
             <td class="type" style="color:red">{{i.type}}</td>
             {% else %}
-            <td class="type">{{i.type}}</td>
+            <td class="type" style="color:green">{{i.type}}</td>
             {% endif %}
 
-            <td>{{i.account}}</td>
-            <td>{{i.amount}}</td>
-            <td>{{i.local_timestamp}}</td>
+            <td class="account">{{i.account}}</td>
+            <td class="amount">{{i.amount}}</td>
+            <td class="time">{{i.local_timestamp}}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -115,10 +113,13 @@ Display df as HTML table
 <script>
     function hideTable() {
         let x = document.getElementById("table");
+        let btn = document.getElementById("btn");
         if (x.style.display == "none") {
             x.style.display = "block";
+            btn.innerText = "Hide Transaction Table";
         } else{
             x.style.display = "none";
+            btn.innerText = "Show Transaction Table";
         }
     }
 </script>
@@ -147,6 +148,9 @@ Display df as HTML table
 
 <div class="container" id="pieChart">
         <div class="col-md-12" id="income">
+            {% if accounts_rec|length == 0 %}
+            <h5>There is nothing to show, sorry</h5>
+            {% else %}
             <canvas id="pieChartIn" width="350" height="100"></canvas>
             <script>
                 let pieChartIn = document.getElementById('pieChartIn').getContext('2d');
@@ -204,8 +208,12 @@ Display df as HTML table
                   }
                 });
           </script>
+            {% endif %}
         </div>
         <div class="col-md-12" id="outflow">
+            {% if accounts_send|length == 0 %}
+            <h5>There is nothing to show, sorry</h5>
+            {% else %}
             <canvas id="pieChartOut" width="350" height="100"></canvas>
             <script>
                 let pieChartOut = document.getElementById('pieChartOut').getContext('2d');
@@ -263,6 +271,8 @@ Display df as HTML table
                   }
                 });
             </script>
+            {% endif %}
+
         </div>
 </div>
 <script>

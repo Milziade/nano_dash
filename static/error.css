@@ -1,0 +1,114 @@
+body {
+    background-color: #f1f1f1;
+    font-family: Montserrat, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+#error {
+    text-align:center;
+}
+h1 {
+    font-size: 140px;
+    font-weight: 600;
+}
+h5 {
+    font-size: 36px;
+}
+
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 80px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f1f1f1;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    h1 {
+        font-size: 80px;
+        font-weight: 600;
+    }
+
+    h5 {
+       font-size: 25px;
+        }
+
+    .img-cont {
+        max-width: 60%;
+        height: auto;
+        margin: 0px auto;
+        position: relative;
+        top: 50px;
+        z-index: -1;
+    }
+
+    .img-cont img {
+        width: 100%;
+    }
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .img-cont {
+        max-width: 60%;
+        height: auto;
+        margin: 0px auto;
+        position: relative;
+        top: 50px;
+        z-index: -1;
+    }
+
+    .img-cont img {
+        width: 100%;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .img-cont {
+        max-width: 60%;
+        height: auto;
+        margin: 0px auto;
+        position: relative;
+        top: 50px;
+        z-index: -1;
+    }
+
+    .img-cont img {
+        width: 100%;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .img-cont {
+        max-width: 60%;
+        height: auto;
+        margin: 0px auto;
+        position: relative;
+        top: 50px;
+        z-index: -1;
+    }
+
+    .img-cont img {
+        width: 100%;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .img-cont {
+        max-width: 30%;
+        height: auto;
+        margin: -50px auto;
+        position: relative;
+        top: 50px;
+        z-index: -1;
+    }
+
+    .img-cont img {
+        width: 100%;
+    }
+}

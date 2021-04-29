@@ -37,4 +37,16 @@ colors = [
     '#b7e4c7',
     '#40916c',
     '#b5e48c',
+    "#F7464A",
+    "#46BFBD",
+    "#FDB45C",
+    "#FEDCBA",
+    "#ABCDEF",
+    "#DDDDDD",
+    "#ABCABC",
+    "#4169E1",
+    "#C71585",
+    "#FF4500",
+    "#FEDCBA",
+    "#46BFBD"
 ]

@@ -3,6 +3,7 @@ body {
     font-family: Montserrat, sans-serif;
     margin: 0;
     padding: 0;
+    width: 100%
 }
 h1 {
     text-align: center;
@@ -36,14 +37,9 @@ th {
     border: 1px solid black;
 }
 td {
+    text-align: center;
     padding: 5px;
     border: 1px solid black;
-}
-#index {
-    text-align: center;
-}
-.type {
-    text-align: center;
 }
 #in-out {
     display: flex;
@@ -52,9 +48,15 @@ td {
 canvas {
     margin-top: 20px;
 }
+h5 {
+    text-align: center;
+}
 #outflow {
     display: none;
 }
 #lineChart{
     margin-top:50px;
+}
+footer {
+
 }
