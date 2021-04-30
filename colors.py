@@ -3,12 +3,12 @@ colors = [
     '#2a9d8f',
     '#e9c46a',
     '#f4a261',
-    '#e76f51',
-    '#0096c7',
+    '#e76f51', #r
+    '#0096c7', #b
     '#48cae4',
     '#0077b6',
     '#ade8f4',
-    '#dda15e',
+    '#dda15e', #r
     '#fefae0',
     '#ffb4a2',
     '#6d6875',
@@ -22,7 +22,6 @@ colors = [
     '#fdffb6',
     '#9bf6ff',
     '#ffc6ff',
-    '#e5e5e5',
     '#bde0fe',
     '#a2d2ff',
     '#ffc8dd',

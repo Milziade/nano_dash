@@ -147,12 +147,26 @@ Display df as HTML table
 <br>
 
 <div class="container" id="pieChart">
-        <div class="col-md-12" id="income">
+        <div class="row" id="income">
             {% if accounts_rec|length == 0 %}
             <h5>There is nothing to show, sorry</h5>
             {% else %}
-            <canvas id="pieChartIn" width="350" height="100"></canvas>
+            <div class="col-lg-5">
+                <canvas id="pieChartIn" width="350" height="250"></canvas>
+            </div>
+            <div class="col-lg-7">
+                <div id="pCILegend" class="pieChartLegend"></div>
+            </div>
+
             <script>
+                function onLegendClicked(e, i) {
+                    let hidden = !pCI.getDatasetMeta(0).data[i].hidden;
+                    pCI.getDatasetMeta(0).data[i].hidden = hidden;
+                    const legendLabelSpan = document.getElementById("legend-label-" + i);
+                    legendLabelSpan.style.textDecoration = hidden ? 'line-through' : '';
+                    pCI.update();
+                };
+
                 let pieChartIn = document.getElementById('pieChartIn').getContext('2d');
 
                 // Global Options
@@ -188,15 +202,11 @@ Display df as HTML table
                       fontSize:25
                     },
                     legend:{
-                      display:true,
-                      position:'left',
-                      labels:{
-                        fontColor:'#000'
-                      }
+                      display:false,
                     },
                     layout:{
                       padding:{
-                        left:50,
+                        left:0,
                         right:0,
                         bottom:0,
                         top:0
@@ -204,18 +214,48 @@ Display df as HTML table
                     },
                     tooltips:{
                       enabled:true
+                    },
+                  legendCallback: pCI => {
+                        let html = '<ul>';
+                        pCI.data.labels.forEach((l, i) => {
+                            const ds = pCI.data.datasets[0];
+                            const bgColor = ds.backgroundColor[i];
+                            const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
+                            html += '<li>' +
+                                '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked(event, \'' + i + '\')">&nbsp;</span>' +
+                                '<span id="legend-label-' + i + '" onclick="onLegendClicked(event, \'' + i + '\')">' +
+                                (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
+                                '</li>';
+                        });
+                        return html + '</ul>';
+                      }
                     }
-                  }
                 });
+
+                document.getElementById('pCILegend').innerHTML = pCI.generateLegend();
+
           </script>
             {% endif %}
         </div>
-        <div class="col-md-12" id="outflow">
+        <div class="row" id="outflow">
             {% if accounts_send|length == 0 %}
             <h5>There is nothing to show, sorry</h5>
             {% else %}
-            <canvas id="pieChartOut" width="350" height="100"></canvas>
+            <div class="col-md-4">
+                <canvas id="pieChartOut" width="350" height="250"></canvas>
+            </div>
+            <div class="col-md-8">
+                <div id="pCOLegend" class="pieChartLegend"></div>
+            </div>
             <script>
+                function onLegendClicked1(e, i) {
+                    let hidden = !pCO.getDatasetMeta(0).data[i].hidden;
+                    pCO.getDatasetMeta(0).data[i].hidden = hidden;
+                    const legendLabelSpan = document.getElementById("legend-label-" + i);
+                    legendLabelSpan.style.textDecoration = hidden ? 'line-through' : '';
+                    pCO.update();
+                };
+
                 let pieChartOut = document.getElementById('pieChartOut').getContext('2d');
 
                 // Global Options
@@ -251,15 +291,11 @@ Display df as HTML table
                       fontSize:25
                     },
                     legend:{
-                      display:true,
-                      position:'right',
-                      labels:{
-                        fontColor:'#000'
-                      }
+                      display:false,
                     },
                     layout:{
                       padding:{
-                        left:50,
+                        left:0,
                         right:0,
                         bottom:0,
                         top:0
@@ -267,12 +303,28 @@ Display df as HTML table
                     },
                     tooltips:{
                       enabled:true
+                    },
+
+                  legendCallback: pCO => {
+                        let html = '<ul>';
+                        pCO.data.labels.forEach((l, i) => {
+                            const ds = pCO.data.datasets[0];
+                            const bgColor = ds.backgroundColor[i];
+                            const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
+                            html += '<li>' +
+                                '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked1(event, \'' + i + '\')">&nbsp;</span>' +
+                                '<span id="legend-label-' + i + '" onclick="onLegendClicked1(event, \'' + i + '\')">' +
+                                (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
+                                '</li>';
+                        });
+                        return html + '</ul>';
+                      }
                     }
-                  }
                 });
+
+                document.getElementById('pCOLegend').innerHTML = pCO.generateLegend();
             </script>
             {% endif %}
-
         </div>
 </div>
 <script>
@@ -280,7 +332,7 @@ Display df as HTML table
         let x = document.getElementById("income");
         let y = document.getElementById("outflow");
             if (x.style.display == "none") {
-                x.style.display = "block";
+                x.style.display = "flex";
                 y.style.display = "none";
             } else{
                 x.style.display = "none";
@@ -290,7 +342,7 @@ Display df as HTML table
         let x = document.getElementById("outflow");
         let y = document.getElementById("income");
             if (x.style.display == "none") {
-                x.style.display = "block";
+                x.style.display = "flex";
                 y.style.display = "none";
             } else{
                 x.style.display = "none";

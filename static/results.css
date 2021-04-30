@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     width: 100%
+    box-sizing: border-box;
 }
 h1 {
     text-align: center;
@@ -48,6 +49,32 @@ td {
 canvas {
     margin-top: 20px;
 }
+.pieChartLegend {
+    overflow-y: scroll;
+    height: 400px;
+}
+#pCOLegend ul{
+    justify-content: center;
+}
+#pCOLegend li {
+    cursor: pointer;
+    margin: 10px 10px;
+    display: flex;
+}
+#pCOLegend li span {
+    padding-left: 8px;
+}
+#pCILegend ul{
+    justify-content: center;
+}
+#pCILegend li {
+    cursor: pointer;
+    margin: 10px 10px;
+    display: flex;
+}
+#pCILegend li span {
+    padding-left: 8px;
+}
 h5 {
     text-align: center;
 }
@@ -56,7 +83,4 @@ h5 {
 }
 #lineChart{
     margin-top:50px;
-}
-footer {
-
 }
