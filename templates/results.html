@@ -47,32 +47,8 @@
     </div>
 </div>
 
-
-<!--
-<table border="1">
-    <thead>
-        <tr>
-            {% for col in colnames %}
-            <th>{{ col }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for record in df %}
-        <tr>
-            {% for col in colnames %}
-            <td>{{ record[col] }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-
-Display df as HTML table
-{{html | safe}}
--->
 <br>
+
 <div class="container" id="showTable">
     <button onclick="hideTable()" type="button" class="btn btn-primary" id="btn">Show Transaction Table</button>
 </div>
@@ -81,7 +57,7 @@ Display df as HTML table
 
 <!-- Transaction tab -->
 <div class="container" id="table">
-    <table class="table table-striped">
+    <table class="table table-striped" id="entrytable">
     <thead>
         <tr>
             <th scope="col">Type</th>
@@ -123,20 +99,18 @@ Display df as HTML table
         }
     }
 </script>
-
-
-<!--
-<div class="container">
-    <h3>Ricevuti</h3>
-    <p>{{accounts_rec}}
-        {{amount_rec}}</p>
-    <h3>Inviati</h3>
-    <p>{{accounts_send}}
-        {{amount_send}}</p>
-</div>
--->
+<!-- Script for split tables in more pages adding search filter -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#entrytable').DataTable();
+    } );
+</script>
 
 <br>
+
 <!-- Pie Chart -->
 <div class="container" id="in-out">
     <div class="p-1"><button onclick="income()" type="button" class="btn btn-success">Income</button></div>
@@ -327,6 +301,7 @@ Display df as HTML table
             {% endif %}
         </div>
 </div>
+<!-- Function to show/hide pieChart -->
 <script>
     function income() {
         let x = document.getElementById("income");
@@ -379,6 +354,7 @@ Display df as HTML table
                           label:'Cumulative balance',      // ?
                           data: {{overall_bal}},
                           borderWidth:1,
+                          pointRadius: 1,
                           borderColor:'#000',
                           hoverBorderWidth:3,       // ?
                           hoverBorderColor:'#000'   // ?
@@ -392,15 +368,15 @@ Display df as HTML table
                         },
                         legend:{
                           display:true,
-                          position:'right',
+                          position:'top',
                           labels:{
                             fontColor:'#000'
                           }
                         },
                         layout:{
                           padding:{
-                            left:50,
-                            right:0,
+                            left:25,
+                            right:25,
                             bottom:0,
                             top:0
                           }
@@ -450,15 +426,15 @@ Display df as HTML table
                         },
                         legend:{
                           display:true,
-                          position:'right',
+                          position:'top',
                           labels:{
                             fontColor:'#000'
                           }
                         },
                         layout:{
                           padding:{
-                            left:50,
-                            right:0,
+                            left:25,
+                            right:25,
                             bottom:0,
                             top:0
                           }

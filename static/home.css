@@ -17,6 +17,6 @@ footer {
     bottom: 0;
     height: 80px;
     width: 100%;
-    overflow: hidden;
     background-color: #f8f9fa;
+    margin-bottom: 5px;
 }
