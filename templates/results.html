@@ -308,7 +308,7 @@
                         },
 
                         'onClick': function(evt) {
-                            let activePoints = pCI.getElementAtEvent(evt);
+                            let activePoints = pCO.getElementAtEvent(evt);
                             if (activePoints[0]) {
                                 let chartData = activePoints[0]['_chart'].config.data;
                                 let idx = activePoints[0]['_index'];
