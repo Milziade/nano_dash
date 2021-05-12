@@ -51,6 +51,7 @@ canvas {
 }
 .pieChartLegend {
     overflow-y: scroll;
+    overflow-x: scroll;
     height: 400px;
 }
 #pCOLegend ul{

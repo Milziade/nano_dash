@@ -10,6 +10,7 @@
 <br>
 
 <!-- Generic info -->
+<body>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -126,12 +127,13 @@
             <h5>There is nothing to show, sorry</h5>
             {% else %}
             <div class="col-lg-5">
-                <canvas id="pieChartIn" width="350" height="250"></canvas>
+                <div class="card" style="background-color: transparent; border:0">
+                    <canvas id="pieChartIn" width="350" height="250"></canvas>
+                </div>
             </div>
             <div class="col-lg-7">
                 <div id="pCILegend" class="pieChartLegend"></div>
             </div>
-
             <script>
                 function onLegendClicked(e, i) {
                     let hidden = !pCI.getDatasetMeta(0).data[i].hidden;
@@ -149,62 +151,86 @@
                 Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
 
                 let pCI = new Chart(pieChartIn, {
-                  type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-                  data:{
-                    labels: [
-                    {% for i in accounts_rec %}
-                    "{{ i }}",
-                    {% endfor %}
-                    ],
-                    datasets:[{
-                      data: {{amount_rec}},
-                      backgroundColor:[
-                        {% for i in colors %}
-                        "{{i}}",
-                        {% endfor %}
-                      ],
-                      borderWidth:1,
-                      borderColor:'#777',
-                      hoverBorderWidth:3,       // ?
-                      hoverBorderColor:'#000'   // ?
-                    }]
-                  },
-                  options:{
-                    title:{
-                      display:true,
-                      text:'Income',
-                      fontSize:25
+                    type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                    data:{
+                        labels: [
+                            {% for i in accounts_rec %}
+                            "{{ i }}",
+                            {% endfor %}
+                        ],
+                        datasets:[{
+                            data: {{amount_rec}},
+                            backgroundColor:[
+                                {% for i in colors %}
+                                "{{i}}",
+                                {% endfor %}
+                            ],
+                            borderWidth:1,
+                            borderColor:'#777',
+                            hoverBorderWidth:3,       // ?
+                            hoverBorderColor:'#000'   // ?
+                        }]
                     },
-                    legend:{
-                      display:false,
-                    },
-                    layout:{
-                      padding:{
-                        left:0,
-                        right:0,
-                        bottom:0,
-                        top:0
-                      }
-                    },
-                    tooltips:{
-                      enabled:true
-                    },
-                  legendCallback: pCI => {
-                        let html = '<ul>';
-                        pCI.data.labels.forEach((l, i) => {
-                            const ds = pCI.data.datasets[0];
-                            const bgColor = ds.backgroundColor[i];
-                            const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
-                            html += '<li>' +
-                                '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked(event, \'' + i + '\')">&nbsp;</span>' +
-                                '<span id="legend-label-' + i + '" onclick="onLegendClicked(event, \'' + i + '\')">' +
-                                (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
-                                '</li>';
-                        });
-                        return html + '</ul>';
-                      }
+
+                    options:{
+                        title:{
+                            display:true,
+                            text:'Income',
+                            fontSize:25
+                        },
+                        legend:{
+                            display:false,
+                        },
+                        layout:{
+                            padding:{
+                                left:0,
+                                right:0,
+                                bottom:0,
+                                top:0
+                            }
+                        },
+                        tooltips:{
+                            enabled: true,
+                            position: 'nearest',
+                            },
+
+                        legendCallback: pCI => {
+                            let html = '<ul>';
+                            pCI.data.labels.forEach((l, i) => {
+                                const ds = pCI.data.datasets[0];
+                                const bgColor = ds.backgroundColor[i];
+                                const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
+                                html += '<li>' +
+                                    '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked(event, \'' + i + '\')">&nbsp;</span>' +
+                                    '<span id="legend-label-' + i + '" onclick="onLegendClicked(event, \'' + i + '\')">' +
+                                    (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
+                                    '</li>';
+                            });
+                            return html + '</ul>';
+                        },
+                        'onClick': function(evt) {
+                            let activePoints = pCI.getElementAtEvent(evt);
+                            if (activePoints[0]) {
+                                var chartData = activePoints[0]['_chart'].config.data;
+                                var idx = activePoints[0]['_index'];
+
+                                var label = chartData.labels[idx];
+                                var value = chartData.datasets[0].data[idx];
+
+                                let el = document.createElement('textarea');
+                                el.value = label;
+                                document.body.appendChild(el);
+                                el.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(el);
+
+                                console.log(label);
+                                alert('Copied!');
+                            }
+                        },
                     }
                 });
+
 
                 document.getElementById('pCILegend').innerHTML = pCI.generateLegend();
 
@@ -215,10 +241,12 @@
             {% if accounts_send|length == 0 %}
             <h5>There is nothing to show, sorry</h5>
             {% else %}
-            <div class="col-md-4">
-                <canvas id="pieChartOut" width="350" height="250"></canvas>
+            <div class="col-lg-5">
+                <div class="card" style="background-color: transparent; border:0">
+                    <canvas id="pieChartOut" width="350" height="250"></canvas>
+                </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-7">
                 <div id="pCOLegend" class="pieChartLegend"></div>
             </div>
             <script>
@@ -238,61 +266,82 @@
                 Chart.defaults.global.defaultFontColor = '#777';    // fontColor titolo
 
                 let pCO = new Chart(pieChartOut, {
-                  type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-                  data:{
-                    labels: [
-                    {% for i in accounts_send %}
-                    "{{ i }}",
-                    {% endfor %}
-                    ],
-                    datasets:[{
-                      data: {{amount_send}},
-                      backgroundColor:[
-                        {% for i in colors %}
-                        "{{i}}",
-                        {% endfor %}
-                      ],
-                      borderWidth:1,
-                      borderColor:'#777',
-                      hoverBorderWidth:3,       // ?
-                      hoverBorderColor:'#000'   // ?
-                    }]
-                  },
-                  options:{
-                    title:{
-                      display:true,
-                      text:'Outflow',
-                      fontSize:25
+                    type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                    data:{
+                        labels: [
+                            {% for i in accounts_send %}
+                            "{{ i }}",
+                            {% endfor %}
+                        ],
+                        datasets:[{
+                            data: {{amount_send}},
+                            backgroundColor:[
+                                {% for i in colors %}
+                                "{{i}}",
+                                {% endfor %}
+                            ],
+                            borderWidth:1,
+                            borderColor:'#777',
+                            hoverBorderWidth:3,       // ?
+                            hoverBorderColor:'#000'   // ?
+                        }]
                     },
-                    legend:{
-                      display:false,
-                    },
-                    layout:{
-                      padding:{
-                        left:0,
-                        right:0,
-                        bottom:0,
-                        top:0
-                      }
-                    },
-                    tooltips:{
-                      enabled:true
-                    },
+                    options:{
+                        title:{
+                            display:true,
+                            text:'Outflow',
+                            fontSize:25
+                        },
+                        legend:{
+                            display:false,
+                        },
+                        layout:{
+                            padding:{
+                                left:0,
+                                right:0,
+                                bottom:0,
+                                top:0
+                            }
+                        },
+                        tooltips:{
+                            enabled:true
+                        },
 
-                  legendCallback: pCO => {
-                        let html = '<ul>';
-                        pCO.data.labels.forEach((l, i) => {
-                            const ds = pCO.data.datasets[0];
-                            const bgColor = ds.backgroundColor[i];
-                            const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
-                            html += '<li>' +
-                                '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked1(event, \'' + i + '\')">&nbsp;</span>' +
-                                '<span id="legend-label-' + i + '" onclick="onLegendClicked1(event, \'' + i + '\')">' +
-                                (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
-                                '</li>';
-                        });
-                        return html + '</ul>';
-                      }
+                        'onClick': function(evt) {
+                            let activePoints = pCI.getElementAtEvent(evt);
+                            if (activePoints[0]) {
+                                let chartData = activePoints[0]['_chart'].config.data;
+                                let idx = activePoints[0]['_index'];
+
+                                let label = chartData.labels[idx];
+                                let value = chartData.datasets[0].data[idx];
+
+                                let el = document.createElement('textarea');
+                                el.value = label;
+                                document.body.appendChild(el);
+                                el.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(el);
+
+                                console.log(label);
+                                alert('Copied!');
+                            }
+                        },
+
+                        legendCallback: pCO => {
+                            let html = '<ul>';
+                            pCO.data.labels.forEach((l, i) => {
+                                const ds = pCO.data.datasets[0];
+                                const bgColor = ds.backgroundColor[i];
+                                const border = ds.borderWidth + 'px solid ' + ds.borderColor[i];
+                                html += '<li>' +
+                                    '<span style="width: 36px; height: 14px; background-color:' + bgColor + '; border:' + border + '" onclick="onLegendClicked1(event, \'' + i + '\')">&nbsp;</span>' +
+                                    '<span id="legend-label-' + i + '" onclick="onLegendClicked1(event, \'' + i + '\')">' +
+                                    (Array.isArray(l) ? l.join('<br/>') : l) +'</span>' +
+                                    '</li>';
+                            });
+                            return html + '</ul>';
+                        }
                     }
                 });
 
@@ -301,6 +350,7 @@
             {% endif %}
         </div>
 </div>
+
 <!-- Function to show/hide pieChart -->
 <script>
     function income() {
@@ -451,5 +501,5 @@
 </div>
 
 <br>
-
+</body>
 {% endblock %}
